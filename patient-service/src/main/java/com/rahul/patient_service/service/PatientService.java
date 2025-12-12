@@ -2,6 +2,7 @@ package com.rahul.patient_service.service;
 
 import com.rahul.patient_service.dto.PatientRequestDTO;
 import com.rahul.patient_service.dto.PatientResponseDTO;
+import com.rahul.patient_service.exception.EmailAlreadyExistsException;
 import com.rahul.patient_service.mapper.PatientMapper;
 import com.rahul.patient_service.model.Patient;
 import com.rahul.patient_service.repository.PatientRepository;
@@ -24,6 +25,9 @@ public class PatientService {
     }
 
     public PatientResponseDTO createPatient(PatientRequestDTO patientRequestDTO){
+        if(patientRepository.existsByEmail(patientRequestDTO.getEmail())){
+            throw new EmailAlreadyExistsException("A patient is allready exist :"+patientRequestDTO.getEmail());
+        }
         Patient patient = patientRepository.save(PatientMapper.toModel(patientRequestDTO));
         return PatientMapper.toDTO(patient);
     }
