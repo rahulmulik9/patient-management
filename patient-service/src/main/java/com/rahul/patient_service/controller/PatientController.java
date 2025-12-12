@@ -2,6 +2,7 @@ package com.rahul.patient_service.controller;
 
 import com.rahul.patient_service.dto.PatientRequestDTO;
 import com.rahul.patient_service.dto.PatientResponseDTO;
+import com.rahul.patient_service.dto.validation.CreatePatientValidationGroup;
 import com.rahul.patient_service.service.PatientService;
 import jakarta.validation.Valid;
 import jakarta.validation.groups.Default;
@@ -28,7 +29,7 @@ public class PatientController {
     }
 
     @PostMapping
-    public ResponseEntity<PatientResponseDTO> savePatient(@Valid @RequestBody PatientRequestDTO patientRequestDTO){
+    public ResponseEntity<PatientResponseDTO> createPatient(@Validated({Default.class, CreatePatientValidationGroup.class}) @RequestBody PatientRequestDTO patientRequestDTO) {
         PatientResponseDTO patientResponseDTO = patientService.createPatient(patientRequestDTO);
         return ResponseEntity.ok().body(patientResponseDTO);
     }
