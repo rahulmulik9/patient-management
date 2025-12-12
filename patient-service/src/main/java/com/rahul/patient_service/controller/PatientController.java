@@ -1,11 +1,11 @@
 package com.rahul.patient_service.controller;
 
+import com.rahul.patient_service.dto.PatientRequestDTO;
 import com.rahul.patient_service.dto.PatientResponseDTO;
 import com.rahul.patient_service.service.PatientService;
+import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -24,4 +24,9 @@ public class PatientController {
         return ResponseEntity.ok().body(patients);
     }
 
+    @PostMapping
+    public ResponseEntity<PatientResponseDTO> savePatient(@Valid @RequestBody PatientRequestDTO patientRequestDTO){
+        PatientResponseDTO patientResponseDTO = patientService.createPatient(patientRequestDTO);
+        return ResponseEntity.ok().body(patientResponseDTO);
+    }
 }
