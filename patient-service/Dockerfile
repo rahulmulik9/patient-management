@@ -1,4 +1,19 @@
-FROM ubuntu:latest
-LABEL authors="MULIK"
+# Builder stage (Maven + JDK17)
+FROM maven:3.9.9-eclipse-temurin-17 AS builder
+WORKDIR /app
 
-ENTRYPOINT ["top", "-b"]
+COPY pom.xml .
+RUN mvn dependency:go-offline -B
+
+COPY src ./src
+RUN mvn clean package -DskipTests
+
+# Runner stage (Temurin JDK17)
+FROM eclipse-temurin:17-jdk AS runner
+WORKDIR /app
+
+# copy the built jar from builder (use absolute path)
+COPY --from=builder /app/target/patient-service-0.0.1-SNAPSHOT.jar /app/app.jar
+
+EXPOSE 4000
+ENTRYPOINT ["java", "-jar", "app.jar"]
